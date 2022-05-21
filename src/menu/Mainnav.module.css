@@ -1,0 +1,149 @@
+.header {
+    z-index: 89;
+    width: 100vw;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    position:fixed;
+    background-color: #ffffff;
+    padding-left: 10px;
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+  }
+  .backheader{
+    position: relative;
+    width: 100vw;
+    height: 50px;
+    z-index: 9;
+  }
+
+
+  
+  .verticalLine{
+    color:rgba(0, 0, 0, .2) ;
+     font-size:30px;
+     font-weight: 250;
+       }
+  
+  
+  .header ul {
+    
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    
+    position: relative;
+    width: calc(100vw - 50px);
+  }
+  
+  
+  .header nav ul{margin-left: 30px;}
+  .header ul li a {
+    text-decoration: none;
+    font-size: 1.3rem;
+    color: #666666;
+    display: flex;
+    align-items: center;
+    border:none;
+    padding: 0;
+    margin:0px 20px 0px 20px;
+    font-weight: 500;
+  }
+
+  .unreadBadge{
+    
+    justify-content: center;
+    align-items: center;
+    position:relative;
+    right: 15px;
+    top: 8px;
+    display: flex;
+    height: 15px;
+    width:15px;
+    border-radius: 100%;
+    color:#fff ;
+    background-color:  #f50057;
+    border: 2px solid white;
+    font-size: 1rem;
+  }
+  a svg {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 7px;
+  
+  }
+  
+  
+  .header a:hover,
+  .header a:active,
+  .header a.active {
+    color: #0c99ff;
+  }
+  
+  .badge {
+    background-color: #cc2062;
+    color: white;
+    border-radius: 12px;
+    padding: 0 1rem;
+    margin-left: 0.5rem;
+  }
+
+  .logo {
+    position: relative;
+    padding: 10px 0px;
+    height:30px;
+    width: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .logoMain{
+    position: absolute;
+    padding: 8px 0px 0px 50px;
+    height:40px;
+    width: auto;
+    
+   
+  }
+
+  @media (max-width:500px) {  .logoMain{display: none;}} 
+.backdrop{
+  position: fixed;
+  background-color:rgba(122, 168, 255, 0.199);
+  z-index: 80;
+  height: 100%;
+  overflow: hidden;
+  
+}
+  
+ .menu{
+   
+    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.7);
+    position: fixed;
+    background-color:#f9f9f9;
+    z-index: 90;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transition: all .1s ease-out;
+  }
+
+.closed .menu ,.closed .backdrop{ width: 0; max-width: 0px; }
+.opened .menu{ width:80%; max-width: 500px;}
+.opened .backdrop{ width:100%;}         
+
+
+
+
+
+  .CloseButton{
+    margin: 5px;
+    position: absolute;
+    right: 0%;
+    top: 0%;
+    z-index: 99;
+             }
+  

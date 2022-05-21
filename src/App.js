@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { auth } from './firebase-config';
+
 import './App.css';
 
-function App() {
+import HomePage from './pages/HomePage';
+import RequestAutopartForm from './pages/RequestAutopartForm';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Mainnav from './menu/Mainnav';
+
+export default function App() {
+  const [user,setUser] = useState(false);
+
+  useEffect(() => {
+      auth.onAuthStateChanged((authUser) => {
+          if(authUser) {
+              setUser(authUser);
+              console.log("current user is: ", authUser);
+          } else {
+              console.log("no user logged in")
+          }
+      })
+  }, [])  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <BrowserRouter>
+      <Mainnav/>
+      <div>
+        <Routes>
+          <Route exact path="/" element={<HomePage/>}/>
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/signup" element={<Signup/>}/>
+          <Route path="/requestAutopartForm" element={user!=false ? <RequestAutopartForm/> : <Login/>}/>
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
-
-export default App;

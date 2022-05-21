@@ -1,0 +1,46 @@
+.container{
+    font-weight: 500;
+    position: relative;
+
+    z-index: 6;
+    border-radius: 5px;
+    margin:20px 10px 20px 10px;
+
+    width: auto;
+    height: auto;
+    background-color: #ffffff;
+    border-radius: 2px;
+ 
+    padding: 5px;
+    font-size: 1rem;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.container a{
+    
+    text-decoration: none;
+    font-size: 1rem;
+    color: #666666;
+    
+}
+
+.container ul li{
+    margin: 20px;
+    
+}
+
+.container ul li hr{
+    border: .1px solid rgba(0, 0, 0, 0.03);
+}
+.container ul li svg{
+    margin-right: 7px;
+    
+}
+.container ul{
+    list-style: none;
+    
+}
+.container a:hover,
+.container a:active,
+.container a.active{color:#0c99ff;}

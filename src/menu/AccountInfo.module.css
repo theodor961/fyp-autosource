@@ -1,0 +1,35 @@
+.InfoContainer{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:10px 10px 10px 10px;
+    width: auto;
+    
+    background-color: #ffffff;
+    border-radius: 2px;
+    font-weight: 500;
+    padding: 15px 5px 15px 5px;
+    font-size: .8rem;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    color: #666666;}
+
+
+
+
+    .InfoContainer .data
+     {margin: auto auto auto 5px;
+      position: relative;
+       }
+
+.InfoContainer .image{
+    margin: auto 5px auto 5px;
+    position: relative;
+    height: 40px;
+    width: 40px;
+    border-radius: 100%;
+}   
+
+.InfoContainer .renew{
+    color: #ff7300;
+}
