@@ -6,7 +6,7 @@ export default function RequestItem(props) {
     
       <Card>
         <div onClick={props.onClick}>
-            <p>{props.requestData.part_info.category} for {props.requestData.brand} {props.requestData.part_info.model}</p>
+            <p>{props.requestData.part_info.category} for {props.requestData.part_info.brand} {props.requestData.part_info.model}</p>
             <p>{props.requestData.description}</p>
         </div>
     </Card>

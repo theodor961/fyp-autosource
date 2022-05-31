@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { addDoc, collection, doc, getDoc, onSnapshot, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL, uploadBytes } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { auth, db, storage } from "../firebase-config";
 
 import MiniLoader from '../components/MiniLoader';
@@ -37,12 +37,12 @@ export default function RequestAutopartForm() {
     const [loader, setLoader] = useState(false);
 
     const [imgProgress, setImgProgress] = useState(0);
-    const imgUrl = useRef();
+    const [imgUrl,setImageUrl] = useState('');
     const [imgUpState, setImgUpState] = useState(true);
     const [imagePreview, setImagePreview] = useState('');
 
     const [audioProgress, setAudioProgress] = useState(0);
-    const audioUrl = useRef();
+    const [audioUrl,setAudioUrl] = useState('');
     const [audioUpState, setAudioUpState] = useState(true);
     const [audioPreview, setAudioPreview] = useState('');
 
@@ -77,8 +77,8 @@ export default function RequestAutopartForm() {
                         model: model.current.value,
                         year: year.current.value,
                     },
-                    image: imgUrl.current,
-                    audio: audioUrl.current,
+                    image: imgUrl,
+                    audio: audioUrl,
                 });
                 brand.current.value = 'default';
                 model.current.value = 'default';
@@ -89,11 +89,9 @@ export default function RequestAutopartForm() {
                 document.getElementById("description").innerHTML = "";
                 title.current.value = '';
                 document.getElementById("title").innerHTML = "";
-                //audioRef.current.value = '';
-                image.current.value = '';
                 setImagePreview('');
                 setAudioPreview('');
-                
+
                 console.log(request);
             }
         } catch (error) {
@@ -143,34 +141,83 @@ export default function RequestAutopartForm() {
     function handleImgUpload() {
         let enteredImg = image.current.files[0]; //ref
         if (!enteredImg) return;
-        console.log("entered image: ", enteredImg)
-        // Create the file metadata
-        /* @type {any} */
-        const metadata = { contentType: 'image/*' };
-
-        const storageRef = ref(storage, 'requests/' + auth.currentUser.uid + '/images/' + (new Date().toString().substring(0, 25)));
+        const metadata = {
+            contentType: 'image/jpeg'
+        };
+        const storageRef = ref(storage, 'images/' + (new Date().toString()));
         const uploadTask = uploadBytesResumable(storageRef, enteredImg, metadata);
-
         uploadTask.on('state_changed',
             (snapshot) => {
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 setImgProgress(progress);
-            }, {},
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case 'paused':
+                        console.log('Upload is paused');
+                        break;
+                    case 'running':
+                        console.log('Upload is running');
+                        break;
+                }
+            },
+            (error) => {
+                switch (error.code) {
+                    case 'storage/unauthorized':
+                        // User doesn't have permission to access the object
+                        break;
+                    case 'storage/canceled':
+                        // User canceled the upload
+                        break;
+
+                    // ...
+
+                    case 'storage/unknown':
+                        // Unknown error occurred, inspect error.serverResponse
+                        break;
+                }
+            },
             () => {
+                // Upload completed successfully, now we can get the download URL
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    //setImgUrl(downloadURL);
-                    imgUrl.current = downloadURL;
-                    setImgUpState(true);
-                    console.log("hone: " + imgUrl.current);
-                    //scroll.current.scrollIntoView({ behavior: 'smooth' })
-                }).catch(() => { 
-                    alert("could not get the Image download URL "); 
-                    setImgUpState(true); 
+                    setImageUrl(downloadURL);
+                    console.log('File available at', imgUrl);
                 });
             }
         );
-
     }
+
+    // function handleImgUpload() {
+    //     let enteredImg = image.current.files[0]; //ref
+    //     if (!enteredImg) return;
+    //     console.log("entered image: ", enteredImg)
+    //     // Create the file metadata
+    //     /* @type {any} */
+    //     const metadata = { contentType: 'image/*' };
+
+    //     const storageRef = ref(storage, 'requests/' + auth.currentUser.uid + '/images/' + (new Date().toString().substring(0, 25)));
+    //     const uploadTask = uploadBytesResumable(storageRef, enteredImg, metadata);
+
+    //     uploadTask.on('state_changed',
+    //         (snapshot) => {
+    //             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //             setImgProgress(progress);
+    //         }, {},
+    //         () => {
+    //             getDownloadURL(storageRef).then((downloadURL) => {
+    //                 //setImgUrl(downloadURL);
+    //                 imgUrl.current = downloadURL;
+    //                 setImgUpState(true);
+    //                 console.log("hone: " + imgUrl.current);
+    //                 //scroll.current.scrollIntoView({ behavior: 'smooth' })
+    //             }).catch(() => { 
+    //                 alert("could not get the Image download URL "); 
+    //                 setImgUpState(true); 
+    //             });
+    //         }
+    //     );
+
+    // }
 
     //audio
     function getAudioPreview() {
@@ -196,15 +243,15 @@ export default function RequestAutopartForm() {
                 setAudioProgress(progress);
             }, {},
             () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                getDownloadURL(storageRef).then((downloadURL) => {
                     //setAudioUrl(downloadURL);
                     audioUrl.current = downloadURL;
                     setAudioUpState(true);
                     console.log("audio hone: ", audioUrl);
                     //scroll.current.scrollIntoView({ behavior: 'smooth' })
-                }).catch(() => { 
-                    alert("could not get the audio download URL "); 
-                    setAudioUpState(true); 
+                }).catch(() => {
+                    alert("could not get the audio download URL ");
+                    setAudioUpState(true);
                 });
             }
         );
@@ -217,156 +264,156 @@ export default function RequestAutopartForm() {
     return (
         <div className={styles.mainContainer}>
             <h1>RequestAutopartForm</h1>
-            
-                <p>Car Brand:
-                    <select
-                        ref={brand}
-                        required
 
-                        onChange={(e) => {
-                            setModels(cars[e.target.selectedIndex].models);
-                            if (brand.current.value == 'default') {
-                                document.getElementById("brand").innerHTML = "you should select a brand";
-                            } else {
-                                document.getElementById("brand").innerHTML = "";
-                            }
-                        }}
-                    >
-                        {/* <option value='default' defaultValue='default'>select brand</option> */}
-                        {cars.map((car, index) => {
-                            return (
-                                <option key={index} value={car.brand}>{car.brand}</option>
+            <p>Car Brand:
+                <select
+                    ref={brand}
+                    required
 
-                            )
-                        })}
-                    </select>
-                </p><p id="brand"></p>
+                    onChange={(e) => {
+                        setModels(cars[e.target.selectedIndex].models);
+                        if (brand.current.value == 'default') {
+                            document.getElementById("brand").innerHTML = "you should select a brand";
+                        } else {
+                            document.getElementById("brand").innerHTML = "";
+                        }
+                    }}
+                >
+                    {/* <option value='default' defaultValue='default'>select brand</option> */}
+                    {cars.map((car, index) => {
+                        return (
+                            <option key={index} value={car.brand}>{car.brand}</option>
+
+                        )
+                    })}
+                </select>
+            </p><p id="brand"></p>
 
 
-                <p>Car Model:
-                    <select
-                        ref={model}
-                        required
-                        onChange={() => {
-                            if (model.current.value == 'default') {
-                                document.getElementById("model").innerHTML = "you should select a model";
-                            } else {
-                                document.getElementById("model").innerHTML = "";
-                            }
-                        }}
-                    >
-                        <option value='default' defaultValue='default'>select model</option>
-                        {models.map((model, index) => {
-                            return (
-                                <option key={index} value={model}>{model}</option>
-                            )
-                        })}
-                    </select>
-                </p><p id="model"></p>
+            <p>Car Model:
+                <select
+                    ref={model}
+                    required
+                    onChange={() => {
+                        if (model.current.value == 'default') {
+                            document.getElementById("model").innerHTML = "you should select a model";
+                        } else {
+                            document.getElementById("model").innerHTML = "";
+                        }
+                    }}
+                >
+                    <option value='default' defaultValue='default'>select model</option>
+                    {models.map((model, index) => {
+                        return (
+                            <option key={index} value={model}>{model}</option>
+                        )
+                    })}
+                </select>
+            </p><p id="model"></p>
 
-                <p>Build year:
-                    <select
-                        ref={year}
-                        required
-                        onChange={() => {
-                            if (year.current.value == 'default') {
-                                document.getElementById("year").innerHTML = "you should select a year";
-                            } else {
-                                document.getElementById("year").innerHTML = "";
-                            }
-                        }}
-                    >
-                        <option value='default' defaultValue='default'>select year</option>
-                        {allYears.map((year) => {
-                            return (
-                                <option key={year} value={year}>{year}</option>
-                            )
-                        })}
-                    </select>
-                </p><p id="year"></p>
+            <p>Build year:
+                <select
+                    ref={year}
+                    required
+                    onChange={() => {
+                        if (year.current.value == 'default') {
+                            document.getElementById("year").innerHTML = "you should select a year";
+                        } else {
+                            document.getElementById("year").innerHTML = "";
+                        }
+                    }}
+                >
+                    <option value='default' defaultValue='default'>select year</option>
+                    {allYears.map((year) => {
+                        return (
+                            <option key={year} value={year}>{year}</option>
+                        )
+                    })}
+                </select>
+            </p><p id="year"></p>
 
-                <p>Auto-part Category:
-                    <select
-                        ref={category}
-                        required
-                        onChange={() => {
-                            if (category.current.value == 'default') {
-                                document.getElementById("category").innerHTML = "you should select a category";
-                            } else {
-                                document.getElementById("category").innerHTML = "";
-                            }
-                        }}
-                    >
-                        <option value='default' defaultValue='default'>select category</option>
-                        {categories.map((category, index) => {
-                            return (
-                                <option key={index} value={category}>{category}</option>
-                            )
-                        })}
-                    </select>
-                </p><p id="category"></p>
+            <p>Auto-part Category:
+                <select
+                    ref={category}
+                    required
+                    onChange={() => {
+                        if (category.current.value == 'default') {
+                            document.getElementById("category").innerHTML = "you should select a category";
+                        } else {
+                            document.getElementById("category").innerHTML = "";
+                        }
+                    }}
+                >
+                    <option value='default' defaultValue='default'>select category</option>
+                    {categories.map((category, index) => {
+                        return (
+                            <option key={index} value={category}>{category}</option>
+                        )
+                    })}
+                </select>
+            </p><p id="category"></p>
 
-                <p>Condition:
-                    <select
-                        ref={condition}
-                        required
-                        onChange={() => {
-                            if (condition.current.value == 'default') {
-                                document.getElementById("condition").innerHTML = "you should select a condition";
-                            } else {
-                                document.getElementById("condition").innerHTML = "";
-                            }
-                        }}
-                    >
-                        <option value='default' defaultValue='default'>select condition</option>
-                        <option value="New">New</option>
-                        <option value="Old">Old</option>
-                        <option value="Both">Both</option>
-                    </select>
-                </p><p id="condition"></p>
+            <p>Condition:
+                <select
+                    ref={condition}
+                    required
+                    onChange={() => {
+                        if (condition.current.value == 'default') {
+                            document.getElementById("condition").innerHTML = "you should select a condition";
+                        } else {
+                            document.getElementById("condition").innerHTML = "";
+                        }
+                    }}
+                >
+                    <option value='default' defaultValue='default'>select condition</option>
+                    <option value="New">New</option>
+                    <option value="Old">Old</option>
+                    <option value="Both">Both</option>
+                </select>
+            </p><p id="condition"></p>
 
-                <InputForm
-                    ref={title}
-                    required={true}
-                    placeholder={'Autopart title'}
-                    type="text"
-                />
-                <p id="title"></p> 
+            <InputForm
+                ref={title}
+                required={true}
+                placeholder={'Autopart title'}
+                type="text"
+            />
+            <p id="title"></p>
 
-                <InputForm
-                    ref={description}
-                    required={true}
-                    placeholder={'Description about the autopart'}
-                    type="text"
-                />
-                <p id="description"></p> <br/>
+            <InputForm
+                ref={description}
+                required={true}
+                placeholder={'Description about the autopart'}
+                type="text"
+            />
+            <p id="description"></p> <br />
 
-                <p>
-                    <BsImageFill className={styles.formIcons} />Add image {!imgUpState && <> {Number((imgProgress).toFixed(1))}%  </>}
-                    <button onClick={() => handleImgUpload()}>upload</button>
-                </p>
-                <div className={styles.imageInput}>
-                    <input type='file' accept="image/*" ref={image} multiple onChange={() => { setImgUpState(false); getImagePreview(); }} />
-                    {imagePreview && <Image src={imagePreview} className={styles.imagePreview} />}
-                </div>
+            <p>
+                <BsImageFill className={styles.formIcons} />Add image {!imgUpState && <> {Number((imgProgress).toFixed(1))}%  </>}
+                <button onClick={() => handleImgUpload()}>upload</button>
+            </p>
+            <div className={styles.imageInput}>
+                <input type='file' accept="image/*" multiple onChange={() => { setImgUpState(false); getImagePreview(); }} />
+                {imagePreview && <Image src={imagePreview} className={styles.imagePreview} />}
+            </div>
 
-                <p><AiTwotoneAudio className={styles.formIcons} />Add audio</p>
-                {!audioUpState && <> {Number((audioProgress).toFixed(1))}% <MiniLoader /> </>}
-                <div className={styles.audioInput}>
-                    {!canPlayOPUS ? //check broswer if safari render a special component
-                        <div>
-                            <button onClick={() => handleAudioUpload(audioRef.current.files[0])}>upload</button>
-                            <button onClick={() => { setAudioPreview(''); audioRef.current.value = null }}>clear</button>
-                            <input type='file' accept="audio/*" capture onChange={() => getAudioPreview()} />
-                            <audio controls src={audioPreview} />
-                            </div> :
-                        <RecorderHook  ref={audioRef} getBolb={b => { handleAudioUpload(b.blob); }} />
-                    }
-                </div>
+            <p><AiTwotoneAudio className={styles.formIcons} />Add audio</p>
+            {!audioUpState && <> {Number((audioProgress).toFixed(1))}% <MiniLoader /> </>}
+            <div className={styles.audioInput}>
+                {!canPlayOPUS ? //check broswer if safari render a special component
+                    <div>
+                        <button onClick={() => handleAudioUpload(audioRef.current.files[0])}>upload</button>
+                        <button onClick={() => { setAudioPreview(''); audioRef.current.value = null }}>clear</button>
+                        <input type='file' accept="audio/*" capture onChange={() => getAudioPreview()} />
+                        <audio controls src={audioPreview} />
+                    </div> :
+                    <RecorderHook getBolb={b => { handleAudioUpload(b.blob); }} />
+                }
+            </div>
 
-                <br /><br />
-                
-            
+            <br /><br />
+
+
 
             <button onClick={sendRequest}>Send Request</button>
 
