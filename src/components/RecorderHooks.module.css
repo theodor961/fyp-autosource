@@ -1,0 +1,105 @@
+.recordingContainer .content,.recordingContainer button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.recordingContainer button {
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    border: none;
+    margin: 10px;
+    position: relative;  
+    transition: .5s ease all;
+    font-size: 25px;
+    box-shadow: 0px 0px 10px rgb(0 0 0 / 20%);
+    padding: auto;
+    cursor:auto;
+   
+    
+}
+
+.recordingContainer .recordButton ,.recordingContainer .cancelButton:hover {
+    background: rgb(245, 0, 87);
+    color: #fff;
+}
+.recordingContainer .cancelButton ,.recordingContainer .recordButton:active {
+    background:#fff ;
+    color: rgb(245, 0, 87); 
+}
+
+.recordingContainer audio{margin: 20px 0;
+    box-shadow: 0 0 10px rgb(0 0 0 / 20%);
+    border-radius: 10px;
+    width: 100%;
+    height: 40px;
+background: #fff;}
+
+.recordingContainer .downloadButton {
+    background: linear-gradient(180deg, #0C99FF 0%, #0c50ff 100%);
+    color: #fff;
+    
+}
+
+.recordingContainer  #notSent{ animation: buttonBeat .7s ease-in-out infinite;}
+
+.recordingContainer .downloadButton:hover,.recordingContainer  #sent ,.recordingContainer  #notSent:hover {
+    background: white;
+    color: #0c50ff;
+    animation: none;
+}
+
+.recordingContainer .duration{
+    animation: recordingBeat 1s ease-in-out infinite;
+    font-size: 2.2rem;
+    color: #555;
+    margin: 0;
+    padding: 0;
+    width: 100px;
+    height: 50px;
+}
+
+
+.recordingContainer .pauseButton{
+    display: none;
+}
+
+
+@keyframes recordingBeat {
+	0%   {color: #555;}
+	50%  {color:#999}
+	100% {color: #555;}
+}
+
+@keyframes buttonBeat {
+	0% {  transform: scale(1);
+        box-shadow: 0px 0px 1px #0C99FF;}
+	50% { transform: scale(1.05);
+        box-shadow: 0px 0px 35px #0C99FF;}
+	100% { transform: scale(1);
+        box-shadow: 0px 0px 1px #0C99FF;}
+}
+
+@media (min-width: 500px) {
+    /* CSS that should be displayed if width is equal to or less than 800px goes here */
+    .recordingContainer .pauseButton:hover{
+        background: linear-gradient(180deg, #0C99FF 0%, #0c50ff 100%);
+        color: #fff;
+    }
+    .recordingContainer .pauseButton{
+        display: flex;
+        background: white;
+        color: #0c50ff;
+      
+    }
+
+    .recordingContainer .recordButton:hover{
+        background:#fff ;
+        color:rgb(245, 0, 87) ; 
+    }
+
+
+}
+  

@@ -1,0 +1,93 @@
+.mainContainer{
+    justify-content: center;
+    align-items: center;
+    margin-left: 5%;
+}
+
+.imagePreview{
+    object-fit: cover;
+    height: auto;
+    max-height: 30vh;
+    width: calc(100% - 60px);}
+
+select{
+   max-width: 200px;
+   margin: 2px;
+   text-align: center;
+   border:0px solid #888888;
+   border-radius: 10px;
+   width: 50%;
+   height: 30px;
+   background-color: #f9f9f9;
+   box-shadow:inset 0px 0px 10px rgb(0 0 0 / 30%);
+}    
+.imageInput,.audioInput{
+    margin: 5px;
+    padding: 10px;
+    text-align: center;
+    border:none;
+    border-radius: 10px;
+    width: auto;
+    height: auto;
+    max-width: 600px;
+    background-color: #f9f9f9;
+    box-shadow:inset 0px 0px 10px rgb(0 0 0 / 30%);
+    word-wrap:break-word;
+}
+
+textarea{
+    position: relative;
+    right: 0px;
+    left: 0px;
+    margin: 5px;
+    padding: 10px;
+    border: 0px solid #ccc;
+    min-height: 30px;
+    max-width: 600px;
+    width: calc(100% - 30px);/* width:100% */
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: inset 0px 0px 10px rgb(0 0 0 / 30%);
+    font-family: "Lato", sans-serif;
+}
+
+
+.formIcons{
+    margin-top: 10px;
+    color: #0C99FF ;
+    padding: 0px 10px 0px 10px;
+}
+
+input::-webkit-file-upload-button {
+    visibility:none;
+  
+   display: none;
+    
+  }
+  input::before{
+    color: #999999;
+     display: inline-block;
+    background-color: #f9f9f9;
+    border: none;
+    border-radius: 10px;
+    padding: 5px 8px;
+    outline: none;
+    color:  #0C99FF; 
+  }
+  
+  .imageInput input::before{
+    content: 'Click to choose an Image';
+  }
+  .audioInput input::before{
+    content: 'Click to record an audio';
+  }
+div{
+    color: #000;
+}
+
+
+
+.MainContainer  .subjectSelect{
+    color: red;
+}
+

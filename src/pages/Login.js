@@ -13,8 +13,15 @@ export default function Login(props) {
     const loginPassword = useRef();
     const [user,setUser] = useState({});
 
+    const [error,setError] = useState(false);
+
     const navigate = useNavigate();
-    const {dest} = useParams();
+    
+    const location = useLocation();
+
+    useEffect(() => {
+        console.log("path: ", location.state)
+    }, [])
 
     onAuthStateChanged(auth, (currentUser) => {
         setUser(currentUser);
@@ -28,37 +35,39 @@ export default function Login(props) {
             loginPassword.current.value
           );
           console.log(user);
-          if (user) {
-            navigate("/requestAutopartForm")
-        }
+        //   if (user) {
+        //     navigate(location.state.pathAfterLogin)
+        //   }
         } catch(error) {
-          alert(error.message);
+          console.log(error.message);
+          setError(true);
         }
-    }
-
-    const signout = async () => {
-        await signOut(auth);
+        if (error != true) {
+            loginEmail.current.value = "";
+            loginPassword.current.value = "";
+        }
     }
 
     return (
         <div style={{ textAlign: 'center' }}>
             <h1>Login</h1>
-           
             <input
                 ref={loginEmail}
                 type='email'
                 placeholder='Email...'
+                required={true}
             /> 
-            
             <br/>
             <input
                 ref={loginPassword}
                 type='password'
                 placeholder='Password...'
+                required={true}
             /> <br/>
-
+            {error == true && (<p>Incorrect username or password</p>)}
             <button onClick={login}>Login</button>
             <p>Don't have an account? <Link to="/signup">SignUp</Link></p>
+            {auth.currentUser != null && (<p>You are already logged in. Login from another account</p>)}
         </div>
     )
 }

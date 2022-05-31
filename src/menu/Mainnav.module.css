@@ -90,8 +90,15 @@
     margin-left: 0.5rem;
   }
 
+  .title {
+    text-align: center;
+    font-size: 23;
+    font-weight: bold;
+  }
+
   .logo {
     position: relative;
+    text-align: center;
     padding: 10px 0px;
     height:30px;
     width: auto;

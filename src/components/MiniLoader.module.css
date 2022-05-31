@@ -1,0 +1,11 @@
+.uploadIcon{
+    font-size: 1.2rem;
+    font-weight:bold ;
+    animation: uploading .7s 0s linear infinite;
+}
+
+@keyframes uploading{
+    0%{color:#0C99FF ;}
+    30%{color: #f50057 ;}
+    100%{color:#0C99FF ; transform: rotate(360deg);}
+}

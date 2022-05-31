@@ -1,0 +1,266 @@
+
+  
+  .modal {
+    line-height: 1rem;
+    position: absolute;
+    padding: 5px;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    width: to;
+    height: calc(100vh - 70px);
+    z-index: 4;
+    padding: 15px 10px;
+    left: 0px;
+    right: 0px;
+    top: 40px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    animation-name: zoom;
+    animation-duration: 0.2s;
+    font-weight: bold;
+
+  }
+
+  .modalBackground {
+    position: fixed;
+    padding: 5px;
+    border-radius: 6px;
+    background-color: transparent;
+    width: auto;
+    height: calc(100vh - 70px);
+    z-index: 3;
+    padding: 15px 10px;
+    left: 0px;
+    right: 0px;
+    top: 15px;
+    bottom: 0px;
+  }
+
+  @keyframes zoom {
+    from {
+      transform: scale(0.1)
+    }
+
+    to {
+      transform: scale(1)
+    }
+  }
+
+  .image {
+    border-radius: 10px;
+    object-fit: cover;
+    position: relative;
+    width: 100%;
+    min-height: 200px;
+    max-height: 400px;
+    height: auto;
+    left: 0px;
+    right: 0px;
+  }
+
+  .questionBar {
+    width: 100%;
+    position: absolute;
+    height: 50%;
+    left: -150px;
+  }
+
+  .button {
+    padding: 10px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    z-index: 5;
+  }
+
+
+
+  .questionIn {
+    z-index: 5;
+    padding-left: 10px;
+    font-size: .8rem;
+    display: flex;
+    color: #888888;
+    width: auto;
+
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .questionIn .subject {
+    font-size: 1rem;
+    color: #000;
+
+  }
+
+
+
+
+  audio {
+    border-radius: 10px;
+    width: calc(100% - 40px);
+    max-width: 400px;
+    height: 40px;
+    margin: 10px 20px;
+    min-width: 250px;
+  }
+
+
+  hr {
+    border: .1px solid #c7c7c7;
+
+  }
+
+  .delete {
+    position: relative;
+    z-index: 5;
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 20px;
+    border-radius: 20px;
+    color: #888;
+    background-color: white;
+    transition: ease .2s all;
+  }
+
+  .delete:hover {
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+    color: #f50057;
+  }
+
+
+  .dropDownContainer ul {
+
+
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    font-size: 1.1rem;
+  }
+
+  .dropDownContainer ul li {
+    width: 80vw;
+    color: #555;
+    display: flex;
+    padding: 10px 0px;
+
+    align-items: center;
+  }
+
+  .dropDownContainer ul li svg {
+    padding: 5px 20px;
+    font-size: 1.5rem;
+  }
+
+  .reports h3 {
+    color: #333;
+  }
+
+  .reports ul li {
+    font-weight: normal;
+    margin-left: 20px;
+  }
+
+  .reports {
+    margin: 10px;
+  }
+
+
+  section p {
+    margin: 0px 20px;
+    line-height: 150%;
+    word-wrap: break-word;
+  }
+
+  @media (min-width: 500px) {
+    /* CSS that should be displayed if width is equal to or less than 800px goes here */
+
+
+  }
+
+  @media only screen and (min-width: 650px) {
+
+    /* CSS that should be displayed if width is equal to or less than 800px goes here */
+    .image {
+      max-width: 90vmin;
+      width: auto;
+      height: 50vmin;
+    }
+
+    .modal {
+      left: auto;
+      float: right;
+      background: #ffffff;
+      clear: left;
+      width: calc(60vw);
+      border-left: 1px solid rgba(153, 153, 153, 0.541);
+    }
+
+
+  }
+
+
+  section {
+    margin: 15px 0px;
+  }
+
+  .question_container {
+
+    float: right;
+    clear: both;
+    max-width: 90%;
+    width: fit-content;
+
+    background: linear-gradient(180deg, #0C99FF 0%, rgba(12, 80, 255, 0.97) 100%);
+    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.25);
+    border-radius: 20px 0px 20px 20px;
+    padding: 5px;
+    margin-left: 10%;
+  }
+
+  .question_container audio::-webkit-media-controls-panel {
+    /* background:#417DFF;*/
+    background-color: #fff;
+  }
+
+  .question_container p {
+    color: #fff;
+    font-weight: normal;
+  }
+
+  .question_container h3,
+  .question_container h4 {
+    padding: 10px;
+    color: #ffF;
+    font-weight: normal;
+  }
+
+  .answer_container {
+    float: left;
+    clear: both;
+    max-width: 90%;
+    width: fit-content;
+    background: #fff;
+    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.25);
+    border-radius: 0px 20px 20px 20px;
+    padding: 5px;
+    margin-right: 10%;
+  }
+
+  .answer_container p {
+    color: #666;
+    font-weight: normal;
+  }
+
+  .answer_container h3 {
+    padding: 10px;
+    color: #666;
+    font-weight: normal;
+  }
+
+  .answer_container audio::-webkit-media-controls-panel {
+    background: #a0a0a027;
+  }

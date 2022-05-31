@@ -12,12 +12,10 @@ export default function Signup() {
     const signupPassword = useRef();
     const firstName = useRef();
     const lastName = useRef();
+    const phone = useRef();
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        console.log("user: ", auth.currentUser?.email)
-    })
 
     const createUser = async () => {
         try {
@@ -30,44 +28,61 @@ export default function Signup() {
             const user = await setDoc(doc(db, 'users', uid), {
                 email: signupEmail.current.value,
                 password: signupPassword.current.value,
-                firstName: firstName.current.value,
-                lastName: lastName.current.value,
+                first_name: firstName.current.value,
+                last_name: lastName.current.value,
+                phone: phone.current.value,
+                created_at: new Date(),
             }).then(
-               navigate("/requestAutopartForm")
-            )
+               navigate(-1)
+            );
+            signupEmail.current.value = '';
+            signupPassword.current.value = '';
+            firstName.current.value = '';
+            lastName.current.value = '';
+            phone.current.value = '';
         } catch (error) {
             alert(error.message);
+            console.log(error);
         }
     }
 
     return (
         <div style={{ textAlign: 'center' }}>
             <h1>Register User</h1>
+            <form onSubmit={createUser} action="#">
             <input
-                required={true}
+                required
                 ref={firstName}
                 type='text'
                 placeholder='First Name...'
             /> <br />
+            
             <input
-                required={true}
+                required
                 ref={lastName}
                 type='text'
                 placeholder='Last Name...'
             /> <br />
             <input
-                required={true}
+                required
                 ref={signupEmail}
                 type='email'
                 placeholder='Email...'
             /> <br />
             <input
-                required={true}
+                required
                 ref={signupPassword}
                 type='password'
                 placeholder='Password...'
             /> <br />
-            <button onClick={createUser}>SignUp</button>
+            <input
+                required
+                ref={phone}
+                type='number'
+                placeholder='Phone...'
+            /> <br />
+            <button type="submit">Signup</button>
+            </form>
             <p>Already have an account? <Link to="/login">Login</Link></p>
         </div>
     )
