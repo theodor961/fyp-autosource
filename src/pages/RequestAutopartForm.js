@@ -144,11 +144,10 @@ export default function RequestAutopartForm() {
         const metadata = {
             contentType: 'image/jpeg'
         };
-        const storageRef = ref(storage, 'images/' + (new Date().toString()));
+        const storageRef = ref(storage, 'requests/' + auth.currentUser.uid + '/images/' + (new Date().toString().substring(0, 25)));
         const uploadTask = uploadBytesResumable(storageRef, enteredImg, metadata);
         uploadTask.on('state_changed',
             (snapshot) => {
-                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 setImgProgress(progress);
                 console.log('Upload is ' + progress + '% done');
@@ -164,60 +163,25 @@ export default function RequestAutopartForm() {
             (error) => {
                 switch (error.code) {
                     case 'storage/unauthorized':
-                        // User doesn't have permission to access the object
                         break;
                     case 'storage/canceled':
-                        // User canceled the upload
                         break;
-
-                    // ...
-
                     case 'storage/unknown':
-                        // Unknown error occurred, inspect error.serverResponse
                         break;
                 }
             },
             () => {
-                // Upload completed successfully, now we can get the download URL
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                     setImageUrl(downloadURL);
+                    setImgUpState(true);
                     console.log('File available at', imgUrl);
+                }).catch(() => {
+                    alert("could not get the audio download URL ");
+                    setImgUpState(true);
                 });
             }
         );
     }
-
-    // function handleImgUpload() {
-    //     let enteredImg = image.current.files[0]; //ref
-    //     if (!enteredImg) return;
-    //     console.log("entered image: ", enteredImg)
-    //     // Create the file metadata
-    //     /* @type {any} */
-    //     const metadata = { contentType: 'image/*' };
-
-    //     const storageRef = ref(storage, 'requests/' + auth.currentUser.uid + '/images/' + (new Date().toString().substring(0, 25)));
-    //     const uploadTask = uploadBytesResumable(storageRef, enteredImg, metadata);
-
-    //     uploadTask.on('state_changed',
-    //         (snapshot) => {
-    //             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    //             setImgProgress(progress);
-    //         }, {},
-    //         () => {
-    //             getDownloadURL(storageRef).then((downloadURL) => {
-    //                 //setImgUrl(downloadURL);
-    //                 imgUrl.current = downloadURL;
-    //                 setImgUpState(true);
-    //                 console.log("hone: " + imgUrl.current);
-    //                 //scroll.current.scrollIntoView({ behavior: 'smooth' })
-    //             }).catch(() => { 
-    //                 alert("could not get the Image download URL "); 
-    //                 setImgUpState(true); 
-    //             });
-    //         }
-    //     );
-
-    // }
 
     //audio
     function getAudioPreview() {
@@ -226,28 +190,43 @@ export default function RequestAutopartForm() {
     }
 
     function handleAudioUpload(file) {
-        // const enteredAudio= audioRef.current.files[0]; //ref
+        //const enteredAudio= audioRef.current.files[0]; //ref
         const enteredAudio = file;
         if (!enteredAudio) return;
         setAudioUpState(false);
 
-        // Create the file metadata
-        /* @type {any} */
-
-        const metadata = { contentType: 'audio/*' };
+        const metadata = { contentType: 'audio/mp3' };
         const storageRef = ref(storage, 'requests/' + auth.currentUser.uid + '/audios/' + (new Date().toString().substring(0, 25)));
         const uploadTask = uploadBytesResumable(storageRef, enteredAudio, metadata);
         uploadTask.on('state_changed',
             (snapshot) => {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 setAudioProgress(progress);
-            }, {},
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case 'paused':
+                        console.log('Upload is paused');
+                        break;
+                    case 'running':
+                        console.log('Upload is running');
+                        break;
+                }
+            },
+            (error) => {
+                switch (error.code) {
+                    case 'storage/unauthorized':
+                        break;
+                    case 'storage/canceled':
+                        break;
+                    case 'storage/unknown':
+                        break;
+                }
+            },
             () => {
-                getDownloadURL(storageRef).then((downloadURL) => {
-                    //setAudioUrl(downloadURL);
-                    audioUrl.current = downloadURL;
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    setAudioUrl(downloadURL);
                     setAudioUpState(true);
-                    console.log("audio hone: ", audioUrl);
+                    console.log("audio hone: ", downloadURL);
                     //scroll.current.scrollIntoView({ behavior: 'smooth' })
                 }).catch(() => {
                     alert("could not get the audio download URL ");
@@ -393,7 +372,7 @@ export default function RequestAutopartForm() {
                 <button onClick={() => handleImgUpload()}>upload</button>
             </p>
             <div className={styles.imageInput}>
-                <input type='file' accept="image/*" multiple onChange={() => { setImgUpState(false); getImagePreview(); }} />
+                <input type='file' accept="image/*" ref={image} multiple onChange={() => { setImgUpState(false); getImagePreview(); }} />
                 {imagePreview && <Image src={imagePreview} className={styles.imagePreview} />}
             </div>
 
@@ -404,7 +383,7 @@ export default function RequestAutopartForm() {
                     <div>
                         <button onClick={() => handleAudioUpload(audioRef.current.files[0])}>upload</button>
                         <button onClick={() => { setAudioPreview(''); audioRef.current.value = null }}>clear</button>
-                        <input type='file' accept="audio/*" capture onChange={() => getAudioPreview()} />
+                        <input type='file' accept="audio/*" ref={audioRef} capture onChange={() => getAudioPreview()} />
                         <audio controls src={audioPreview} />
                     </div> :
                     <RecorderHook getBolb={b => { handleAudioUpload(b.blob); }} />

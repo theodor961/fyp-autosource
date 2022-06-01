@@ -25,6 +25,7 @@ export default function RequestFullView(props) {
         <p>Description: {props.requestData.description}</p>
         <p>Created at: {props.requestData.created_at.toDate().toString().substring(0,15)}</p>
         {props.requestData.image && <Image src={props.requestData.image} alt='no_img' className={d10.image} />}
+        {props.requestData.audio && <audio controls controlsList="nodownload" src={props.requestData.audio} type='audio/*'> </audio>}
         <br/>
         <AllReplies request_id={props.requestData.id}/>
       </div>
