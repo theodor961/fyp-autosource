@@ -9,6 +9,7 @@ export default function OrderFillInformations(props) {
   const address = useRef('');
 
   const ordersCollRef = collection(db,'orders');
+  const cityCollRef = collection(db,'');
 
   const createOrder = async() => {
     try {
@@ -34,8 +35,9 @@ export default function OrderFillInformations(props) {
           required 
           ref={address}
           type='text'
-          placeholder='Your address'
-        /><br/>
+          placeholder='Detailed address'
+        />
+        <br/><br/>
         <button onClick={createOrder}>Done</button>
       </div>
     </div>
