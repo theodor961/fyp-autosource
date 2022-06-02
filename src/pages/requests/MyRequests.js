@@ -10,17 +10,7 @@ export default function MyRequests(props) {
   const requestsCollRef = collection(db,'requests');
   const [requests,setRequests] = useState([]);
 
-  //const [theRequest, setTheRequest] = useState([]);
-  //const [showState, setShowstate] = useState(false);
-
   const [overlay, setOverlay] = useState({status: false, data: []});
-
-  // const closeOverlay = () => {
-  //   setShowstate(false) 
-  // }
-  // const openOverlay = () => { 
-  //   setShowstate(true) 
-  // }
 
   useEffect(() => {
     try {

@@ -21,7 +21,7 @@ export default function ReplyFullView(props) {
         <br/>
         <br/>
         <button onClick={() => {setOverlay(true)}}>Order</button>
-        {overlay == true && <OrderFillInfos reply_id={props.replyData.id} onClose={() => {setOverlay(false)}}/>}
+        {overlay == true && <OrderFillInfos reply={props.replyData} onClose={() => {setOverlay(false)}}/>}
       </div>
     </div>
   )

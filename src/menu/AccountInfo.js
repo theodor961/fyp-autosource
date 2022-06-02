@@ -5,8 +5,9 @@ import {UserContext} from '../store/UserContext';
 import { async } from '@firebase/util';
 import { doc, getDoc } from 'firebase/firestore';
 
-export default function AccountInfo(props) {
+export default function AccountInfo() {
   const userData = useContext(UserContext);
+
   // const [docData,setDocData] = useState([]);
 
   // const read = async() => {

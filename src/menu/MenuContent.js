@@ -1,7 +1,5 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import ButtonLogin from '../components/ButtonLogin';
-import Login from '../pages/Login';
 import d8 from './MenuContent.module.css'
 
 export default function MenuContent(props) {
@@ -16,6 +14,7 @@ export default function MenuContent(props) {
                 <li onClick={props.onClick}><Link to='/login'>Login</Link></li>
                 <li onClick={props.onClick}><Link to='/requestAutopartForm'>Request AutoPart</Link></li>
                 <li onClick={props.onClick}><Link to='/myRequests'>My Requests</Link></li>
+                <li onClick={props.onClick}><Link to='/myOrders'>My Orders</Link></li>
             </ul>
 
             

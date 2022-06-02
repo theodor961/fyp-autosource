@@ -11,6 +11,7 @@ import Signup from './pages/Signup';
 import Mainnav from './menu/Mainnav';
 import MyRequests from './pages/requests/MyRequests';
 import GetUserData from './store/GetUserData';
+import MyOrders from './pages/requests/MyOrders';
 
 export default function App() {
   const [user,setUser] = useState(false);
@@ -42,6 +43,7 @@ export default function App() {
           <Route path="/signup" element={<Signup/>}/>
           <Route path="/requestAutopartForm" element={user!=false ? <RequestAutopartForm/> : <Login/>}/>
           <Route path="/myRequests" element={user!=false ? <MyRequests/> : <Login/>}/>
+          <Route path="/myOrders" element={user!=false ? <MyOrders/> : <Login/>}/>
         </Routes>
       </div>
       </UserContext.Provider>

@@ -6,19 +6,6 @@ import React, { useEffect, useState } from 'react';
 export default function GetUserData(props) {
     const [docData, setDocData] = useState([]);
 
-    // useEffect(() => {
-    //     const getData = async() => {
-    //         const docSnap = await getData(docRef);
-    //         if (docSnap.exists()) {
-    //             props.setUserData(docSnap.data());
-    //             setUser(docSnap.data());
-    //             console.log("document data: ", docSnap.data())
-    //         } else {
-    //             console.log("no such document");
-    //         }
-    //     }
-    // }, [])
-
     const read = async () => {
         if (auth.currentUser != null) {
             const uid = auth.currentUser.uid;
