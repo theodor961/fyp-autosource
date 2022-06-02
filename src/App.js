@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { auth } from './firebase-config';
 
-import './App.css';
+import { UserContext } from './store/UserContext';
 
 import HomePage from './pages/HomePage';
 import RequestAutopartForm from './pages/RequestAutopartForm';
@@ -10,9 +10,11 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Mainnav from './menu/Mainnav';
 import MyRequests from './pages/requests/MyRequests';
+import GetUserData from './store/GetUserData';
 
 export default function App() {
   const [user,setUser] = useState(false);
+  const [currentUserData, setCurrentUserData] = useState([])
 
   useEffect(() => {
       auth.onAuthStateChanged((authUser) => {
@@ -28,7 +30,11 @@ export default function App() {
 
   return (
       <BrowserRouter>
+      <UserContext.Provider value={currentUserData}>
+
+      {user != false && <GetUserData setUserData={(user)=>setCurrentUserData(user)}/>}
       <Mainnav/>
+      {console.log("email :",currentUserData.email)}
       <div>
         <Routes>
           <Route exact path="/" element={<HomePage/>}/>
@@ -38,6 +44,7 @@ export default function App() {
           <Route path="/myRequests" element={user!=false ? <MyRequests/> : <Login/>}/>
         </Routes>
       </div>
+      </UserContext.Provider>
     </BrowserRouter>
   );
 }
