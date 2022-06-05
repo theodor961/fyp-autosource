@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
-import { db, auth } from '../../firebase-config';
+import { db, auth } from '../firebase-config';
 
-import OrderItem from '../orders/OrderItem';
-import OrderFullView from '../orders/OrderFullView';
+import OrderItem from './orders/OrderItem';
+import OrderFullView from './orders/OrderFullView';
 
 export default function MyOrders() {
   const ordersCollRef = collection(db, 'orders');

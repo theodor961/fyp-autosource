@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import { collection, doc, onSnapshot, query, where } from 'firebase/firestore';
 
-import { db, auth } from '../../firebase-config';
-import RequestItem from './RequestItem';
-import RequestFullView from './RequestFullView';
+import { db, auth } from '../firebase-config';
+import RequestItem from './requests/RequestItem';
+import RequestFullView from './requests/RequestFullView';
 
+import styles from './MyRequests.module.css';
 
 export default function MyRequests(props) {
   const requestsCollRef = collection(db,'requests');
@@ -25,8 +26,9 @@ export default function MyRequests(props) {
   }, [])
 
   return (
-    <div style={{textAlign: 'center'}}>
-        <h1>My Requests</h1>
+    <div className={styles.container}>
+      <p className={styles.title}>My Requests</p>
+      
 
         {requests.map((request) => {
           return (

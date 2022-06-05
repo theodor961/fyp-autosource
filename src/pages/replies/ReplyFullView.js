@@ -13,6 +13,9 @@ export default function ReplyFullView(props) {
         <div>
           <button className={styles.button} onClick={props.onClose}><IoArrowBack size='30' /></button>
         </div>
+        <h3>{props.replyData.title}</h3>
+        <p>Category: {props.replyData.part_info.category}</p>
+        <p>Car: {props.replyData.part_info.brand} {props.replyData.part_info.model} {props.replyData.part_info.year}</p>
         <p>Description: {props.replyData.description}</p>
         <p>Condition: {props.replyData.condition}</p>
         <p>Refundble: {props.replyData.refundable}</p>

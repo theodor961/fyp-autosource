@@ -9,9 +9,9 @@ import RequestAutopartForm from './pages/RequestAutopartForm';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Mainnav from './menu/Mainnav';
-import MyRequests from './pages/requests/MyRequests';
+import MyRequests from './pages/MyRequests';
 import GetUserData from './store/GetUserData';
-import MyOrders from './pages/requests/MyOrders';
+import MyOrders from './pages/MyOrders';
 
 export default function App() {
   const [user,setUser] = useState(false);

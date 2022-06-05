@@ -1,0 +1,12 @@
+.container {
+    flex: 1;
+    text-align: center;
+    background-color: #F0F8FF;
+}
+
+.title {
+    font-size: 20px;
+    color: blueviolet;
+    font-weight: bold;
+}
+

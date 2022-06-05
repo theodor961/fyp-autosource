@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { addDoc, collection, doc, getDoc, onSnapshot, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL, listAll } from "firebase/storage";
 import { auth, db, storage } from "../firebase-config";
 
 import MiniLoader from '../components/MiniLoader';
@@ -12,8 +12,7 @@ import styles from './RequestAutopartForm.module.css';
 
 import { BsImageFill } from 'react-icons/bs'
 import { AiTwotoneAudio } from 'react-icons/ai'
-import { IoText } from 'react-icons/io5'
-import { FaPaperPlane } from 'react-icons/fa'
+
 
 export default function RequestAutopartForm() {
     const title = useRef();
@@ -36,13 +35,16 @@ export default function RequestAutopartForm() {
 
     const [loader, setLoader] = useState(false);
 
+    const [images, setImages] = useState([]);
+    const array = [];
     const [imgProgress, setImgProgress] = useState(0);
-    const [imgUrl,setImageUrl] = useState('');
+    const [imgUrl, setImageUrl] = useState([]);
     const [imgUpState, setImgUpState] = useState(true);
-    const [imagePreview, setImagePreview] = useState('');
+    const [imagePreview, setImagePreview] = useState([]);
 
+    const [audios, setAudios] = useState([]);
     const [audioProgress, setAudioProgress] = useState(0);
-    const [audioUrl,setAudioUrl] = useState('');
+    const [audioUrl, setAudioUrl] = useState('');
     const [audioUpState, setAudioUpState] = useState(true);
     const [audioPreview, setAudioPreview] = useState('');
 
@@ -89,7 +91,7 @@ export default function RequestAutopartForm() {
                 document.getElementById("description").innerHTML = "";
                 title.current.value = '';
                 document.getElementById("title").innerHTML = "";
-                setImagePreview('');
+                setImagePreview([]);
                 setAudioPreview('');
 
                 console.log(request);
@@ -134,60 +136,94 @@ export default function RequestAutopartForm() {
     //image
     function getImagePreview() {
         const url = URL.createObjectURL(image.current.files[0]);
-        setImagePreview(url);
+        setImagePreview([...imagePreview, `url`]);
         console.log("image url: ", url);
     }
 
     function handleImgUpload() {
-        let enteredImg = image.current.files[0]; //ref
-        if (!enteredImg) return;
+        // let enteredImg = image.current.files[0]; //ref
+        if (!images) return;
         const metadata = {
             contentType: 'image/jpeg'
         };
-        const storageRef = ref(storage, 'requests/' + auth.currentUser.uid + '/images/' + (new Date().toString().substring(0, 25)));
-        const uploadTask = uploadBytesResumable(storageRef, enteredImg, metadata);
-        uploadTask.on('state_changed',
-            (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                setImgProgress(progress);
-                console.log('Upload is ' + progress + '% done');
-                switch (snapshot.state) {
-                    case 'paused':
-                        console.log('Upload is paused');
-                        break;
-                    case 'running':
-                        console.log('Upload is running');
-                        break;
-                }
-            },
-            (error) => {
-                switch (error.code) {
-                    case 'storage/unauthorized':
-                        break;
-                    case 'storage/canceled':
-                        break;
-                    case 'storage/unknown':
-                        break;
-                }
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    setImageUrl(downloadURL);
-                    setImgUpState(true);
-                    console.log('File available at', imgUrl);
-                }).catch(() => {
-                    alert("could not get the audio download URL ");
-                    setImgUpState(true);
-                });
-            }
-        );
+
+        {
+            images.map((image, index) => {
+                console.log("loop");
+                const storageRef = ref(storage, 'requests/' + auth.currentUser.uid + '/images/' + index + "-" + (new Date().toString().substring(0, 25)));
+                const uploadTask = uploadBytesResumable(storageRef, image, metadata);
+                console.log('uploadTask: ', uploadTask);
+
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        setImgProgress(progress);
+                        console.log('Upload is ' + progress + '% done');
+                        switch (snapshot.state) {
+                            case 'paused':
+                                console.log('Upload is paused');
+                                break;
+                            case 'running':
+                                console.log('Upload is running');
+                                break;
+                        }
+                    },
+                    (error) => {
+                        switch (error.code) {
+                            case 'storage/unauthorized':
+                                break;
+                            case 'storage/canceled':
+                                break;
+                            case 'storage/unknown':
+                                break;
+                        }
+                    },
+                    async () => {
+                        await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                            console.log("image: ", image);
+                            setImageUrl((prevState) => [...prevState, downloadURL]);
+                            setImgUpState(true);
+                            console.log("imageUrl: ", downloadURL)
+                        }).catch(() => {
+                            alert("could not get the audio download URL ");
+                            setImgUpState(true);
+                        });
+                    }
+                );
+            })
+        }
     }
+
+    //image trying to add many images
+    useEffect(() => {
+        console.log("slider images: ", images);
+        console.log('File available at', imgUrl);
+        console.log('image preview: ', imagePreview)
+    }, [images, imgUrl, imagePreview])
+
+    const onImageChange = (e) => {
+        setImages([...images, ...image.current.files]);
+        console.log("target: ", e.target.files);
+
+        //array.push(e.target.files);
+        for (let i=0; i< e.target.files.length; i++) {
+            array.push(URL.createObjectURL(e.target.files[i]));
+            //setImagePreview([URL.createObjectURL(e.target.files[i]), ...imagePreview])
+        }  
+        setImagePreview([...imagePreview, ...array]);
+        console.log("array: ", array); 
+            // const url = URL.createObjectURL(img);
+            // setImagePreview([...imagePreview, url]);
+            console.log("image url: ", imagePreview);
+    }
+
 
     //audio
     function getAudioPreview() {
         const url2 = URL.createObjectURL(audioRef.current.files[0]);
         setAudioPreview(url2);
     }
+    
 
     function handleAudioUpload(file) {
         //const enteredAudio= audioRef.current.files[0]; //ref
@@ -367,15 +403,32 @@ export default function RequestAutopartForm() {
             />
             <p id="description"></p> <br />
 
+            {/* Images */}
             <p>
                 <BsImageFill className={styles.formIcons} />Add image {!imgUpState && <> {Number((imgProgress).toFixed(1))}%  </>}
                 <button onClick={() => handleImgUpload()}>upload</button>
             </p>
             <div className={styles.imageInput}>
-                <input type='file' accept="image/*" ref={image} multiple onChange={() => { setImgUpState(false); getImagePreview(); }} />
-                {imagePreview && <Image src={imagePreview} className={styles.imagePreview} />}
+                {/* <input type='file' accept="image/*" ref={image} multiple onChange={() => { setImgUpState(false); getImagePreview(); }} /> */}
+                <input type='file' accept="image/*" ref={image} multiple onChange={onImageChange} />
+                {/* {imagePreview && <Image src={imagePreview} className={styles.imagePreview} />} */}
+                {imagePreview.map((preview, index) => (
+                    <div key={index}>
+                        <button
+                            onClick={() => {
+                                //when we use splice we do not use setImages
+                                images.splice(index, 1);
+                                setImagePreview(imagePreview.filter((imagePreview) => imagePreview !== preview));
+                                console.log('array: ', imagePreview)
+                            }}>
+                            delete
+                        </button>
+                        <Image src={preview} className={styles.imagePreview} />
+                    </div>
+                ))}
             </div>
 
+            {/* Audios */}
             <p><AiTwotoneAudio className={styles.formIcons} />Add audio</p>
             {!audioUpState && <> {Number((audioProgress).toFixed(1))}% <MiniLoader /> </>}
             <div className={styles.audioInput}>
@@ -386,7 +439,7 @@ export default function RequestAutopartForm() {
                         <input type='file' accept="audio/*" ref={audioRef} capture onChange={() => getAudioPreview()} />
                         <audio controls src={audioPreview} />
                     </div> :
-                    <RecorderHook getBolb={b => { handleAudioUpload(b.blob); }} />
+                    <RecorderHook getBolb={b => { handleAudioUpload(b.blob); console.log("blob: ", b)}} />
                 }
             </div>
 
@@ -395,6 +448,7 @@ export default function RequestAutopartForm() {
 
 
             <button onClick={sendRequest}>Send Request</button>
+            <br />
 
         </div>
     )

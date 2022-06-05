@@ -61,14 +61,18 @@ export default function OrderFillInformations(props) {
           title: props.reply.title,
           description: props.reply.description,
           image: props.reply.image,
+          brand: props.reply.part_info.brand,
+          model: props.reply.part_info.model,
+          year: props.reply.part_info.year,
+          category: props.reply.part_info.category,
         },
         destination_address: {
           city: city.current.value,
           description: description.current.value,
         },
         source_address: {
-          city: props.reply.seller.location.city,
-          description: props.reply.seller.location.description,
+          city: props.reply.seller.address.city,
+          description: props.reply.seller.address.description,
         },
         seller: {
           seller_name: props.reply.seller.name,
