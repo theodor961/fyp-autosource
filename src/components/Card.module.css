@@ -4,4 +4,6 @@
   border-radius: 20px;
   width: 80%;
   margin-left: 10%;
+  flex-direction: column;
+  margin-top: 2%;
 }

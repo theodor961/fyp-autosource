@@ -1,6 +1,6 @@
 .container {
     flex: 1;
-    text-align: center;
+    /* text-align: center; */
     background-color: #F0F8FF;
 }
 
@@ -8,5 +8,6 @@
     font-size: 20px;
     color: blueviolet;
     font-weight: bold;
+    text-align: center;
 }
 
