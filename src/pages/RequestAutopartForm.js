@@ -36,11 +36,11 @@ export default function RequestAutopartForm() {
     const [loader, setLoader] = useState(false);
 
     const [images, setImages] = useState([]);
-    const array = [];
+    // const array = [];
     const [imgProgress, setImgProgress] = useState(0);
     const [imgUrl, setImageUrl] = useState([]);
     const [imgUpState, setImgUpState] = useState(true);
-    const [imagePreview, setImagePreview] = useState([]);
+    // const [imagePreview, setImagePreview] = useState([]);
 
     const [audios, setAudios] = useState([]);
     const [audioProgress, setAudioProgress] = useState(0);
@@ -91,7 +91,7 @@ export default function RequestAutopartForm() {
                 document.getElementById("description").innerHTML = "";
                 title.current.value = '';
                 document.getElementById("title").innerHTML = "";
-                setImagePreview([]);
+
                 setAudioPreview('');
 
                 console.log(request);
@@ -133,12 +133,7 @@ export default function RequestAutopartForm() {
         }
     }
 
-    //image
-    function getImagePreview() {
-        const url = URL.createObjectURL(image.current.files[0]);
-        setImagePreview([...imagePreview, `url`]);
-        console.log("image url: ", url);
-    }
+
 
     function handleImgUpload() {
         // let enteredImg = image.current.files[0]; //ref
@@ -197,24 +192,10 @@ export default function RequestAutopartForm() {
     //image trying to add many images
     useEffect(() => {
         console.log("slider images: ", images);
-        console.log('File available at', imgUrl);
-        console.log('image preview: ', imagePreview)
-    }, [images, imgUrl, imagePreview])
+    }, [images, imgUrl])
 
-    const onImageChange = (e) => {
+    const onImageChange = () => {
         setImages([...images, ...image.current.files]);
-        console.log("target: ", e.target.files);
-
-        //array.push(e.target.files);
-        for (let i=0; i< e.target.files.length; i++) {
-            array.push(URL.createObjectURL(e.target.files[i]));
-            //setImagePreview([URL.createObjectURL(e.target.files[i]), ...imagePreview])
-        }  
-        setImagePreview([...imagePreview, ...array]);
-        console.log("array: ", array); 
-            // const url = URL.createObjectURL(img);
-            // setImagePreview([...imagePreview, url]);
-            console.log("image url: ", imagePreview);
     }
 
 
@@ -223,7 +204,7 @@ export default function RequestAutopartForm() {
         const url2 = URL.createObjectURL(audioRef.current.files[0]);
         setAudioPreview(url2);
     }
-    
+
 
     function handleAudioUpload(file) {
         //const enteredAudio= audioRef.current.files[0]; //ref
@@ -405,32 +386,28 @@ export default function RequestAutopartForm() {
 
             {/* Images */}
             <p>
-                <BsImageFill className={styles.formIcons} />Add image {!imgUpState && <> {Number((imgProgress).toFixed(1))}%  </>}
-                <button onClick={() => handleImgUpload()}>upload</button>
+                <BsImageFill className={styles.formIcons} />Add image {!imgUpState && <> {Number((imgProgress).toFixed(1))}% <MiniLoader /> </>}
+                <button onClick={() => {handleImgUpload(); setImgUpState(false)}}>upload</button>
             </p>
             <div className={styles.imageInput}>
                 {/* <input type='file' accept="image/*" ref={image} multiple onChange={() => { setImgUpState(false); getImagePreview(); }} /> */}
                 <input type='file' accept="image/*" ref={image} multiple onChange={onImageChange} />
-                {/* {imagePreview && <Image src={imagePreview} className={styles.imagePreview} />} */}
-                {imagePreview.map((preview, index) => (
+                {images.map((preview, index) => (
                     <div key={index}>
                         <button
                             onClick={() => {
-                                //when we use splice we do not use setImages
-                                images.splice(index, 1);
-                                setImagePreview(imagePreview.filter((imagePreview) => imagePreview !== preview));
-                                console.log('array: ', imagePreview)
+                                setImages(images.filter((imagePreview) => imagePreview !== preview));
                             }}>
                             delete
                         </button>
-                        <Image src={preview} className={styles.imagePreview} />
+                        <Image src={URL.createObjectURL(preview)} className={styles.imagePreview} />
                     </div>
                 ))}
             </div>
 
             {/* Audios */}
-            <p><AiTwotoneAudio className={styles.formIcons} />Add audio</p>
-            {!audioUpState && <> {Number((audioProgress).toFixed(1))}% <MiniLoader /> </>}
+            <p><AiTwotoneAudio className={styles.formIcons} />Add audio
+            {!audioUpState && <> {Number((audioProgress).toFixed(1))}% <MiniLoader /> </>}</p>
             <div className={styles.audioInput}>
                 {!canPlayOPUS ? //check broswer if safari render a special component
                     <div>
@@ -439,7 +416,7 @@ export default function RequestAutopartForm() {
                         <input type='file' accept="audio/*" ref={audioRef} capture onChange={() => getAudioPreview()} />
                         <audio controls src={audioPreview} />
                     </div> :
-                    <RecorderHook getBolb={b => { handleAudioUpload(b.blob); console.log("blob: ", b)}} />
+                    <RecorderHook getBolb={b => { handleAudioUpload(b.blob); console.log("blob: ", b) }} />
                 }
             </div>
 
@@ -449,7 +426,7 @@ export default function RequestAutopartForm() {
 
             <button onClick={sendRequest}>Send Request</button>
             <br />
-
         </div>
+        
     )
 }

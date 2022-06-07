@@ -19,7 +19,6 @@ export default function MyRequests(props) {
       onSnapshot(q, (snapshot) => {
         setRequests(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})));
       });
-      console.log(requests);
     } catch(error) {
       console.log(error);
     }
@@ -36,10 +35,7 @@ export default function MyRequests(props) {
               requestData={request}
               key={request.id} 
               onClick={() => {
-                // openOverlay();
-                // setTheRequest(request);
                 setOverlay({status: true, data: request});
-                console.log("i clicked", overlay.status);
               }}
             />
           )

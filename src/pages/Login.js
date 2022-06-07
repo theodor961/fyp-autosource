@@ -35,9 +35,6 @@ export default function Login(props) {
             loginPassword.current.value
           );
           console.log(user);
-        //   if (user) {
-        //     navigate(location.state.pathAfterLogin)
-        //   }
         } catch(error) {
           console.log(error.message);
           setError(true);

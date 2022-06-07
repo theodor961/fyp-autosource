@@ -65,6 +65,7 @@ export default function OrderFillInformations(props) {
           model: props.reply.part_info.model,
           year: props.reply.part_info.year,
           category: props.reply.part_info.category,
+          refundable: props.reply.refundable,
         },
         destination_address: {
           city: city.current.value,

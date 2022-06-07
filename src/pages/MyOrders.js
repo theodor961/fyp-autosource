@@ -17,7 +17,6 @@ export default function MyOrders() {
       onSnapshot(q, (snapshot) => {
         setOrders(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})));
       });
-      console.log("orders: ", orders);
     } catch(error) {
       console.log(error);
     }

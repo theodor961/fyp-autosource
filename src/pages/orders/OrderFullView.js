@@ -9,7 +9,6 @@ export default function OrderFullView(props) {
   return (
     <div className={styles.modalBackground}>
       <div className={styles.modal}>
-        {console.log('orderData: ', props.orderData)}
         <div>
           <button className={styles.button} onClick={props.onClose}><IoArrowBack size='30' /></button>
         </div>

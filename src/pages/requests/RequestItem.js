@@ -15,11 +15,11 @@ export default function RequestItem(props) {
         <div className={styles.child1}>
           <div className={styles.miniChild}>
           <p className={styles.label}>Description:</p>
-          <p className={styles.data}>{props.requestData.description.substring(0,190)}...</p>
+          <p className={styles.data}>{props.requestData.description.substring(0,30)}</p>
           </div>
         </div>
         <div className={styles.child2}>
-          <p className={styles.date}>{props.requestData.created_at.toDate().toString().substring(0,15)}</p>
+          <p className={styles.date}>{props.requestData.created_at.toDate().toString().substring(0,21)}</p>
         </div>
       </div>
     </Card>
